@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/project?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: Hana0306!
+
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    database: mysql
+    hibernate:
+      ddl-auto: update
+
+openweathermap:
+  key: 2b7dc2acf690b2ecddd0f87b9ed0ccb4

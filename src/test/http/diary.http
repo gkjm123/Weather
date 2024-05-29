@@ -1,0 +1,23 @@
+### Create Diary
+POST http://localhost:8080/create/diary?date=2024-05-28
+Content-Type: application/json
+
+"Haha"
+
+### Get Diary
+GET http://localhost:8080/read/diary?date=2024-05-28
+Content-Type: application/json
+
+### Get Diaries
+GET http://localhost:8080/read/diaries?startDate=2024-05-27&endDate=2024-05-28
+Content-Type: application/json
+
+### Update Diariy
+PUT http://localhost:8080/update/diary?date=2024-05-28
+Content-Type: application/json
+
+"HOHOHO"
+
+### Delete Diaries
+DELETE http://localhost:8080/delete/diary?date=2024-05-28
+Content-Type: application/json
