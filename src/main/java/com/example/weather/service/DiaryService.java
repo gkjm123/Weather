@@ -116,13 +116,11 @@ public class DiaryService {
         String weatherData = getWeatherString();
         Map<String, Object> parseWeather = parseWeather(weatherData);
 
-        DateWeather dateWeather = DateWeather.builder()
+        return DateWeather.builder()
                 .date(LocalDate.now())
                 .weather(parseWeather.get("main").toString())
                 .icon(parseWeather.get("icon").toString())
                 .temperature((Double)parseWeather.get("temp")).build();
-
-        return dateWeather;
     }
 
     private DateWeather getDateWeather(LocalDate date) {
