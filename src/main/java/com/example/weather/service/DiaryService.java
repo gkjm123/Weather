@@ -26,18 +26,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 @Service
 @RequiredArgsConstructor
 public class DiaryService {
-
     @Value("${openweathermap.key}")
     private String apiKey;
 
     final private DiaryRepository diaryRepository;
-
     private final DateWeatherRepository dateWeatherRepository;
-
     private static final Logger logger = LoggerFactory.getLogger(WeatherApplication.class);
 
     @Transactional
@@ -48,6 +44,7 @@ public class DiaryService {
 
     @Transactional
     public void createDiary(LocalDate date, String text) {
+        //날씨 데이터 가져오기
         DateWeather weather = getDateWeather(date);
 
         Diary nowdiary = Diary.builder()
@@ -62,6 +59,7 @@ public class DiaryService {
     }
 
     private String getWeatherString() {
+        //URL 에 API key 넣고 GET 방식으로 요청, 응답 코드 체크 후 String 반환
         String apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=seoul&appid=" + apiKey;
 
         try {
@@ -70,6 +68,7 @@ public class DiaryService {
             connection.setRequestMethod("GET");
             int responseCode = connection.getResponseCode();
             BufferedReader br;
+
             if (responseCode == 200) {
                 br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             } else {
@@ -78,11 +77,12 @@ public class DiaryService {
 
             String inputLine;
             StringBuilder response = new StringBuilder();
+
             while ((inputLine = br.readLine()) != null) {
                 response.append(inputLine);
             }
-            br.close();
 
+            br.close();
             return response.toString();
 
         } catch (Exception e) {
@@ -101,20 +101,21 @@ public class DiaryService {
         }
 
         Map<String, Object> resultMap = new HashMap<>();
-
         JSONObject mainData = (JSONObject) jsonObject.get("main");
         resultMap.put("temp", mainData.get("temp"));
         JSONArray weatherArray = (JSONArray) jsonObject.get("weather");
         JSONObject weatherData = (JSONObject) weatherArray.get(0);
         resultMap.put("main", weatherData.get("main"));
         resultMap.put("icon", weatherData.get("icon"));
-        return resultMap;
 
+        return resultMap;
     }
 
     private DateWeather getWeatherFromApi() {
+        //API 에서 날씨 정보 String 으로 가져오기
         String weatherData = getWeatherString();
         Map<String, Object> parseWeather = parseWeather(weatherData);
+
         DateWeather dateWeather = DateWeather.builder()
                 .date(LocalDate.now())
                 .weather(parseWeather.get("main").toString())
@@ -125,8 +126,10 @@ public class DiaryService {
     }
 
     private DateWeather getDateWeather(LocalDate date) {
+        //DB에 해당날짜 날씨 정보가 있으면 가져오기
         List<DateWeather> dateWeatherListFromDB = dateWeatherRepository.findAllByDate(date);
 
+        //없으면 API 에 요청
         if (dateWeatherListFromDB.isEmpty()) {
             return getWeatherFromApi();
         } else {
@@ -149,7 +152,6 @@ public class DiaryService {
         Diary nowDiary = diaryRepository.getFirstByDate(date);
         nowDiary.setText(text);
         diaryRepository.save(nowDiary);
-
     }
 
     @Transactional

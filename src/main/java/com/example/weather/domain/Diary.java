@@ -15,6 +15,7 @@ public class Diary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String weather;
     private String icon;
     private Double temperature;

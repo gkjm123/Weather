@@ -18,5 +18,4 @@ public class DateWeather {
     private String weather;
     private String icon;
     private Double temperature;
-
 }
